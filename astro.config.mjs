@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
 import cloudflare from "@astrojs/cloudflare";
 
@@ -7,7 +7,12 @@ export default defineConfig({
   output: "server",
   adapter: cloudflare({
     platformProxy: {
-      enabled: true
-    }
-  })
+      enabled: true,
+    },
+  }),
+  build: {
+    rollupOptions: {
+      external: [".prisma/client/wasm"],
+    },
+  },
 });

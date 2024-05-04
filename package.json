@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build && prisma generate",
-    "preview": "astro build && prisma generate && wrangler pages dev",
+    "preview": "prisma generate && astro build && wrangler pages dev",
     "astro": "astro",
     "deploy": "astro build && wrangler pages deploy",
     "cf-typegen": "wrangler types",
@@ -17,7 +17,7 @@
     "@astrojs/check": "^0.5.10",
     "@astrojs/cloudflare": "^10.2.5",
     "@prisma/adapter-d1": "^5.13.0",
-    "@prisma/client": "^5.13.0",
+    "@prisma/client": "5.13.0",
     "astro": "^4.7.1",
     "typescript": "^5.4.5"
   },
