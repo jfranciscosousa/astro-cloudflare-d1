@@ -9,16 +9,21 @@
     "preview": "astro build && wrangler pages dev",
     "astro": "astro",
     "deploy": "astro build && wrangler pages deploy",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "gen-migration": "prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script --output",
+    "apply-migration": "wrangler d1 migrations apply astro-cloudflare-d1"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
     "@astrojs/cloudflare": "^10.2.5",
+    "@prisma/adapter-d1": "^5.13.0",
+    "@prisma/client": "^5.13.0",
     "astro": "^4.7.1",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240502.0",
+    "prisma": "^5.13.0",
     "wrangler": "^3.53.1"
   }
 }

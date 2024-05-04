@@ -3,6 +3,12 @@ name = "astro-cloudflare-d1"
 compatibility_date = "2024-05-02"
 pages_build_output_dir = "./dist"
 
+[[d1_databases]]
+binding = "DB"
+database_name = "astro-cloudflare-d1"
+database_id = "b5710955-d3c2-49dc-8dc3-01b0943df8d9"
+preview_database_id = "DB"
+
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Pages Function, running it closer to your back-end infrastructure
 # rather than the end user may result in better performance.

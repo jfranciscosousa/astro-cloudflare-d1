@@ -1,16 +1,63 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+import { buildClient } from "../data/prisma";
 
+let prisma = buildClient(Astro.locals.runtime.env.DB);
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+
+    switch (data.get("_action")) {
+      case "delete-all":
+				await prisma.todo.deleteMany({});
+
+        break;
+      case "create":
+        const content = data.get("content") as string;
+
+        await prisma.todo.create({ data: { content } });
+
+        break;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+let result = await prisma.todo.findMany();
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+		<ViewTransitions />
+  </head>
+  <body>
+    <h1>Astro Todos</h1>
+
+    {result.map((todo) => <p>{todo.content}</p>)}
+
+    <form method="POST" transition:persist>
+      <button name="_action" value="delete-all">Delete all</button>
+    </form>
+
+    <form method="POST" transition:persist>
+      <input
+        autofocus
+        aria-label="Content"
+        type="text"
+        name="content"
+        required
+      />
+
+      <button name="_action" value="create">Submit</button>
+    </form>
+  </body>
 </html>
