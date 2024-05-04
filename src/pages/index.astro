@@ -1,8 +1,8 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
-import { buildClient } from "../data/prisma";
+import { ViewTransitions } from "astro:transitions";
+import { buildClient, schema } from "../data/drizzle";
 
-let prisma = buildClient(Astro.locals.runtime.env.DB);
+let drizzle = buildClient(Astro.locals.runtime.env.DB);
 
 if (Astro.request.method === "POST") {
   try {
@@ -10,13 +10,13 @@ if (Astro.request.method === "POST") {
 
     switch (data.get("_action")) {
       case "delete-all":
-				await prisma.todo.deleteMany({});
+        await drizzle.delete(schema.todos);
 
         break;
       case "create":
         const content = data.get("content") as string;
 
-        await prisma.todo.create({ data: { content } });
+        await drizzle.insert(schema.todos).values({ content });
 
         break;
     }
@@ -27,7 +27,7 @@ if (Astro.request.method === "POST") {
   }
 }
 
-let result = await prisma.todo.findMany();
+let result = await drizzle.query.todos.findMany()
 ---
 
 <html lang="en">
@@ -37,7 +37,7 @@ let result = await prisma.todo.findMany();
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Astro</title>
-		<ViewTransitions />
+    <ViewTransitions />
   </head>
   <body>
     <h1>Astro Todos</h1>
