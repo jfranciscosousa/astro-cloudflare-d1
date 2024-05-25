@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, type InferSelectModel } from "drizzle-orm";
 import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
 
 export const todos = sqliteTable("todos", {
@@ -6,3 +6,5 @@ export const todos = sqliteTable("todos", {
   content: text("content").notNull(),
   createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
 });
+
+export type TodoType = InferSelectModel<typeof todos>;

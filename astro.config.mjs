@@ -1,5 +1,8 @@
 import { defineConfig } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
+import preact from "@astrojs/preact";
+
+import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
@@ -7,7 +10,11 @@ export default defineConfig({
   adapter: cloudflare({
     mode: "directory",
     platformProxy: {
-      enabled: true,
-    },
+      enabled: true
+    }
   }),
+  experimental: {
+    actions: true
+  },
+  integrations: [preact(), tailwind()]
 });

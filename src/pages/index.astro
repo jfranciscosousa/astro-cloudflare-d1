@@ -1,33 +1,12 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { buildClient, schema } from "../data/drizzle";
+import CreateTodo from "../components/CreateTodo";
+import DeleteAllTodos from "../components/DeleteAllTodos";
+import { buildClient } from "../data/drizzle";
+import TodosList from "../components/TodosList";
 
-let drizzle = buildClient(Astro.locals.runtime.env.DB);
-
-if (Astro.request.method === "POST") {
-  try {
-    const data = await Astro.request.formData();
-
-    switch (data.get("_action")) {
-      case "delete-all":
-        await drizzle.delete(schema.todos);
-
-        break;
-      case "create":
-        const content = data.get("content") as string;
-
-        await drizzle.insert(schema.todos).values({ content });
-
-        break;
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-  }
-}
-
-let result = await drizzle.query.todos.findMany()
+const drizzle = buildClient(Astro.locals.runtime.env.DB);
+const result = await drizzle.query.todos.findMany()
 ---
 
 <html lang="en">
@@ -40,24 +19,18 @@ let result = await drizzle.query.todos.findMany()
     <ViewTransitions />
   </head>
   <body>
-    <h1>Astro Todos</h1>
+    <div class="flex flex-col h-screen">
+      <header class="bg-gray-900 text-white py-4 px-6 flex justify-between">
+        <h1 class="text-2xl font-bold">Astro todos</h1>
 
-    {result.map((todo) => <p>{todo.content}</p>)}
+        <DeleteAllTodos />
+      </header>
 
-    <form method="POST" transition:persist>
-      <button name="_action" value="delete-all">Delete all</button>
-    </form>
+      <div class="flex-1 overflow-auto p-6">
+        <TodosList todos={result} />
 
-    <form method="POST" transition:persist>
-      <input
-        autofocus
-        aria-label="Content"
-        type="text"
-        name="content"
-        required
-      />
-
-      <button name="_action" value="create">Submit</button>
-    </form>
+        <CreateTodo client:load />
+      </div>
+    </div>
   </body>
 </html>
