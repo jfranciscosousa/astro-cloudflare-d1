@@ -10,11 +10,16 @@ export default defineConfig({
   adapter: cloudflare({
     mode: "directory",
     platformProxy: {
-      enabled: true
-    }
+      enabled: true,
+    },
   }),
   experimental: {
-    actions: true
+    actions: true,
   },
-  integrations: [preact(), tailwind()]
+  integrations: [preact(), tailwind()],
+  vite: {
+    ssr: {
+      external: ["node:async_hooks"],
+    },
+  },
 });
