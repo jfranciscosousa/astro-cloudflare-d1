@@ -7,18 +7,23 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
+
   adapter: cloudflare({
     mode: "directory",
     platformProxy: {
       enabled: true,
     },
   }),
+
   experimental: {
     actions: true,
   },
+
   integrations: [preact(), tailwind()],
+
   vite: {
     ssr: {
+      // To allow compatibility with Cloudflare nodejs_compat mode
       external: ["node:async_hooks"],
     },
   },
